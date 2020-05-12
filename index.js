@@ -2,6 +2,10 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
+// Action functionality
+const { viewAllDepts, viewAllEmps, viewAllRoles, empByMgr, addNewDept, addNewEmp, addNewRole, updateRole, updateMgr, deleteADept, deleteAnEmp, deleteARole } = require('./assets/scripts/app');
+
+// Create connection to database
 const connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -10,6 +14,7 @@ const connection = mysql.createConnection({
     database: ""
 });
 
+// Connect to database
 connection.connect(err => {
     if (err) throw err;
 
@@ -18,6 +23,7 @@ connection.connect(err => {
     runStart();
 })
 
+// Application initialization
 function runStart() {
     const viewDepts = "View ALL departments";
     const viewEmps = "View ALL employees";
@@ -55,40 +61,40 @@ function runStart() {
         .then(answer => {
             switch (answer.action) {
                 case viewDepts:
-                    console.log('viewDepts Hit')
+                    viewAllDepts();
                     break;
                 case viewEmps:
-                    console.log('viewEmps Hit')
+                    viewAllEmps();
                     break;
                 case viewRoles:
-                    console.log('viewRoles Hit')
+                    viewAllRoles();
                     break;
                 case viewEmpByMgr:
-                    console.log('viewEmpByMgr Hit')
+                    empByMgr();
                     break;
                 case addDept:
-                    console.log('addDept Hit')
+                    addNewDept();
                     break;
                 case addEmp:
-                    console.log('addEmp Hit')
+                    addNewEmp();
                     break;
                 case addRole:
-                    console.log('addRole Hit')
+                    addNewRole();
                     break;
                 case updateEmpRole:
-                    console.log('updateEmpRole Hit')
+                    updateRole();
                     break;
                 case updateEmpMgr:
-                    console.log('updateEmpMgr Hit')
+                    updateMgr();
                     break;
                 case deleteDept:
-                    console.log('deleteDept Hit')
+                    deleteADept();
                     break;
                 case deleteEmp:
-                    console.log('deleteEmp Hit')
+                    deleteAnEmp();
                     break;
                 case deleteRole:
-                    console.log('deleteRole Hit')
+                    deleteRole();
                     break;
                 case "Exit":
                     connection.end();
