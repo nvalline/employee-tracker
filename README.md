@@ -35,7 +35,7 @@ The user is first presented with a landing page. From the landing page, the user
 
 ## Technologies
 
-![GitHub Top Language](https://img.shields.io/github/languages/top/nvalline/note-taker) ![GitHub language count](https://img.shields.io/github/languages/count/nvalline/note-taker)
+![GitHub Top Language](https://img.shields.io/github/languages/top/nvalline/employee-tracker) ![GitHub language count](https://img.shields.io/github/languages/count/nvalline/employee-tracker)
 
 - Javascript, node.js, express.js, HTML, CSS
 
