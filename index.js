@@ -1,9 +1,10 @@
 // Dependencies
+const cTable = require('console.table');
 const inquirer = require('inquirer');
 const mysql = require('mysql');
 
 // Action functionality
-const { viewAllDepts, viewAllEmps, viewAllRoles, empByMgr, addNewDept, addNewEmp, addNewRole, updateRole, updateMgr, deleteADept, deleteAnEmp, deleteARole } = require('./assets/scripts/app');
+const { empByMgr, addNewDept, addNewEmp, addNewRole, updateRole, updateMgr, deleteADept, deleteAnEmp, deleteARole } = require('./assets/scripts/app');
 
 // Create connection to database
 const connection = mysql.createConnection({
@@ -11,7 +12,7 @@ const connection = mysql.createConnection({
     port: 3306,
     user: "root",
     password: "password",
-    database: ""
+    database: "employee_tracker_db"
 });
 
 // Connect to database
@@ -94,7 +95,7 @@ function runStart() {
                     deleteAnEmp();
                     break;
                 case deleteRole:
-                    deleteRole();
+                    deleteARole();
                     break;
                 case "Exit":
                     connection.end();
@@ -102,3 +103,16 @@ function runStart() {
             }
         })
 }
+
+function viewAllDepts() {
+    console.log('============================')
+    console.log('All Departments')
+    console.log('============================')
+    const queryString = "SELECT * FROM department";
+    connection.query(queryString, (err, res) => {
+        if (err) throw err;
+        console.table(res)
+        runStart();
+    })
+}
+

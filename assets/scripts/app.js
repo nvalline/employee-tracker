@@ -1,10 +1,17 @@
 // Dependencies
 const inquirer = require('inquirer');
 
+
 module.exports = {
     viewAllDepts: () => {
         console.log('============================')
         console.log('viewAllDepts Hit on App')
+        const queryString = "SELECT * FROM department";
+        connection.query(queryString, (err, res) => {
+            if (err) throw err;
+            console.log(res)
+        })
+
         console.log('============================')
     },
 
@@ -74,3 +81,4 @@ module.exports = {
         console.log('============================')
     }
 }
+
