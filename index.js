@@ -116,3 +116,26 @@ function viewAllDepts() {
     })
 }
 
+function viewAllEmps() {
+    console.log('============================')
+    console.log('All Employees')
+    console.log('============================')
+    const queryString = "SELECT id, first_name, last_name FROM employee";
+    connection.query(queryString, (err, res) => {
+        if (err) throw err;
+        console.table(res)
+        runStart();
+    })
+}
+
+function viewAllRoles() {
+    console.log('============================')
+    console.log('All Roles')
+    console.log('============================')
+    const queryString = "SELECT id, title FROM role";
+    connection.query(queryString, (err, res) => {
+        if (err) throw err;
+        console.table(res)
+        runStart();
+    })
+}
