@@ -1,28 +1,29 @@
 // Dependencies
 const cTable = require('console.table');
 const inquirer = require('inquirer');
-const mysql = require('mysql');
+// const mysql = require('mysql');
+const connection = require('./assets/scripts/mysqlLib');
 
 // Action functionality
 const { empByMgr, addNewDept, addNewEmp, addNewRole, updateRole, updateMgr, deleteADept, deleteAnEmp, deleteARole } = require('./assets/scripts/app');
 
 // Create connection to database
-const connection = mysql.createConnection({
-    host: "localhost",
-    port: 3306,
-    user: "root",
-    password: "password",
-    database: "employee_tracker_db"
-});
+// const connection = mysql.createConnection({
+//     host: "localhost",
+//     port: 3306,
+//     user: "root",
+//     password: "password",
+//     database: "employee_tracker_db"
+// });
 
-// Connect to database
-connection.connect(err => {
-    if (err) throw err;
+// // Connect to database
+// connection.connect(err => {
+//     if (err) throw err;
 
-    console.log(`Connected by id ${connection.threadId}`)
+//     console.log(`Connected by id ${connection.threadId}`)
 
-    runStart();
-})
+//     runStart();
+// })
 
 // Application initialization
 function runStart() {
@@ -139,3 +140,5 @@ function viewAllRoles() {
         runStart();
     })
 }
+
+runStart();
