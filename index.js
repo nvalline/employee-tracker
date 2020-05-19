@@ -1,7 +1,6 @@
 // Dependencies
 const cTable = require('console.table');
 const inquirer = require('inquirer');
-// const mysql = require('mysql');
 const connection = require('./assets/config/connection');
 
 // Action functionality
@@ -104,7 +103,9 @@ function viewAllEmps() {
     console.log('============================')
     console.log('All Employees')
     console.log('============================')
-    const queryString = "SELECT id, first_name, last_name FROM employee";
+    let queryString = "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name, employee.manager_id ";
+    queryString += "FROM employee INNER JOIN role ON role.id = employee.role_id ";
+    queryString += "INNER JOIN department ON department.id = role.department_id ";
     connection.query(queryString, (err, res) => {
         if (err) throw err;
         console.table(res)
