@@ -1,5 +1,6 @@
 // Dependencies
 const inquirer = require('inquirer');
+const connection = require('../config/connection');
 
 
 module.exports = {
@@ -7,11 +8,12 @@ module.exports = {
         console.log('============================')
         console.log('viewAllDepts Hit on App')
         const queryString = "SELECT * FROM department";
-        connection.query(queryString, (err, res) => {
+        return connection.query(queryString, (err, res) => {
             if (err) throw err;
-            console.log(res)
+            return res;
         })
 
+        console.table();
         console.log('============================')
     },
 
