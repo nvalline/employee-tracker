@@ -4,7 +4,7 @@ const inquirer = require('inquirer');
 const connection = require('./assets/config/connection');
 
 // Action functionality
-const { empByMgr, addNewDept, addNewEmp, addNewRole, updateRole, updateMgr, deleteADept, deleteAnEmp, deleteARole } = require('./assets/scripts/app');
+// const { empByMgr, addNewDept, addNewEmp, addNewRole, updateRole, updateMgr, deleteADept, deleteAnEmp, deleteARole } = require('./assets/scripts/app');
 
 // Application initialization
 function runStart() {
@@ -29,7 +29,7 @@ function runStart() {
             viewDepts,
             viewEmps,
             viewRoles,
-            viewEmpByMgr,
+            // viewEmpByMgr,
             addDept,
             addEmp,
             addRole,
@@ -53,9 +53,9 @@ function runStart() {
                 case viewRoles:
                     viewAllRoles();
                     break;
-                case viewEmpByMgr:
-                    empByMgr();
-                    break;
+                // case viewEmpByMgr:
+                //     mgrQuery();
+                //     break;
                 case addDept:
                     addNewDept();
                     break;
@@ -86,6 +86,112 @@ function runStart() {
             }
         })
 }
+
+function addNewDept() {
+    inquirer.prompt({
+        type: "input",
+        message: "Enter the name of the Department:",
+        name: "newDept"
+    })
+        .then(answer => {
+            const queryString = "INSERT INTO department (name) VALUES (?);";
+            connection.query(queryString, [answer.newDept], (err, result) => {
+                if (err) throw err;
+                console.log('============================')
+                console.log(`${answer.newDept} was added!`)
+                console.log('============================')
+                runStart();
+            })
+        })
+}
+
+function addNewRole() {
+    let deptsArray = [];
+    let deptsQuery;
+
+    const queryString = "SELECT * FROM department";
+    connection.query(queryString, (err, data) => {
+        deptsQuery = data;
+
+        for (const dept of deptsQuery) {
+            deptsArray.push(dept.name);
+        }
+
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Select the department to add a role:",
+                name: "dept",
+                choices: deptsArray
+            },
+            {
+                type: "input",
+                message: "Enter the name of the role",
+                name: "role_name"
+            }
+        ])
+            .then(answer => {
+                console.log(answer)
+                let deptId;
+                const queryString = "SELECT id FROM department WHERE name = ?";
+                connection.query(queryString, [answer.dept], (err, data) => {
+                    console.log(data)
+
+                    deptId = data[0].id;
+                    console.log(deptId)
+
+                    const insertString = "INSERT INTO role (title, department_id) VALUES (?, ?)";
+                    connection.query(insertString, [answer.role_name, deptId], (err, result) => {
+                        if (err) throw err;
+                        console.log('============================')
+                        console.log(`${answer.role_name} was added!`)
+                        console.log('============================')
+
+                        runStart();
+                    })
+                })
+            })
+    })
+
+
+}
+
+// function empByMgr(data) {
+//     let choicesArray = [];
+
+//     for (const mgr of data) {
+//         choicesArray.push(`${mgr.first_name} ${mgr.last_name}`);
+//     }
+
+//     inquirer.prompt({
+//         type: "list",
+//         message: "Select the Manager to search:",
+//         name: "manager",
+//         choices: choicesArray
+//     })
+//         .then(answer => {
+//             console.log('============================')
+//             console.log('Employee By Manager')
+//             console.log('============================')
+//             console.log(answer.manager)
+//             const queryString = "SELECT id, first_name, last_name FROM employee WHERE manager id  = ";
+//             connection.query(queryString, (err, res) => {
+//                 if (err) throw err;
+//                 console.table(res)
+//                 runStart();
+//             })
+
+//         });
+// }
+
+// function mgrQuery() {
+//     const queryString = "SELECT first_name, last_name FROM employee WHERE manager_id IS NOT NULL";
+//     connection.query(queryString, (err, data) => {
+//         if (err) throw err;
+
+//         empByMgr(data);
+//     })
+// }
 
 function viewAllDepts() {
     console.log('============================')
