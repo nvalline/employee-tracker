@@ -53,9 +53,6 @@ function runStart() {
                 case viewRoles:
                     viewAllRoles();
                     break;
-                // case viewEmpByMgr:
-                //     mgrQuery();
-                //     break;
                 case addDept:
                     addNewDept();
                     break;
@@ -68,17 +65,8 @@ function runStart() {
                 case updateEmpRole:
                     updateRole();
                     break;
-                case updateEmpMgr:
-                    updateMgr();
-                    break;
-                case deleteDept:
-                    deleteADept();
-                    break;
                 case deleteEmp:
                     deleteAnEmp();
-                    break;
-                case deleteRole:
-                    deleteARole();
                     break;
                 case "Exit":
                     connection.end();
@@ -127,24 +115,14 @@ function addEmpDetails(roleData) {
             .then(answer => {
                 let mgr;
                 if (answer.emp_mgr !== "None") {
-                    console.log(mgrArray)
-                    console.log(answer.emp_mgr)
 
                     const mgrSplit = answer.emp_mgr.split(" ");
-                    console.log(mgrSplit[0])
-                    console.log(mgrSplit[1])
-
-                    console.log("This is the data:")
-                    console.log(data)
 
                     choosenMgr = data.filter((e) => {
                         return e.first_name == mgrSplit[0] && e.last_name == mgrSplit[1];
                     })
-                    console.log("This is the choosenMgr:")
-                    console.log(choosenMgr)
 
                     const mgrId = choosenMgr[0].id;
-                    console.log(mgrId)
 
                     mgr = mgrId;
                 } else {
@@ -246,8 +224,6 @@ function addNewRole() {
         ])
             .then(answer => {
 
-                // ** If role exists return
-
                 choosenDept = deptsQuery.filter((dept) => {
                     return dept.name == answer.dept;
                 })
@@ -267,42 +243,79 @@ function addNewRole() {
     })
 }
 
-// function empByMgr(data) {
-//     let choicesArray = [];
+function updateRole() {
+    let empArray = [];
+    let empQuery;
+    let roleArray = ["Create New"];
+    let roleQuery;
 
-//     for (const mgr of data) {
-//         choicesArray.push(`${mgr.first_name} ${mgr.last_name}`);
-//     }
+    const queryEmpString = "SELECT * FROM employee";
+    connection.query(queryEmpString, (err, data) => {
+        if (err) throw err;
+        empQuery = data;
 
-//     inquirer.prompt({
-//         type: "list",
-//         message: "Select the Manager to search:",
-//         name: "manager",
-//         choices: choicesArray
-//     })
-//         .then(answer => {
-//             console.log('============================')
-//             console.log('Employee By Manager')
-//             console.log('============================')
-//             console.log(answer.manager)
-//             const queryString = "SELECT id, first_name, last_name FROM employee WHERE manager id  = ";
-//             connection.query(queryString, (err, res) => {
-//                 if (err) throw err;
-//                 console.table(res)
-//                 runStart();
-//             })
+        for (const name of empQuery) {
+            fullName = `${name.first_name} ${name.last_name}`;
+            empArray.push(fullName);
+        }
+    })
 
-//         });
-// }
+    const queryRoleString = "SELECT * FROM role";
+    connection.query(queryRoleString, (err, data) => {
+        if (err) throw err;
+        roleQuery = data;
 
-// function mgrQuery() {
-//     const queryString = "SELECT first_name, last_name FROM employee WHERE manager_id IS NOT NULL";
-//     connection.query(queryString, (err, data) => {
-//         if (err) throw err;
+        for (const role of roleQuery) {
+            roleArray.push(role.title);
+        }
 
-//         empByMgr(data);
-//     })
-// }
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Select the employee to update their role:",
+                name: "emp_name",
+                choices: empArray
+            },
+            {
+                type: "list",
+                message: "Select the new role:",
+                name: "new_role",
+                choices: roleArray
+            }
+        ])
+            .then(answer => {
+                if (answer.new_role === "Create New") {
+                    console.log("You must first create the role.")
+                    addNewRole();
+                } else {
+                    const empSplit = answer.emp_name.split(" ");
+
+                    choosenEmp = empQuery.filter((e) => {
+                        return e.first_name == empSplit[0] && e.last_name == empSplit[1];
+                    })
+
+                    roleData = roleQuery.filter((role) => {
+                        return role.title == answer.new_role;
+                    })
+
+                    updateRoleDetails(choosenEmp, roleData);
+                }
+            })
+    })
+}
+
+function updateRoleDetails(choosenEmp, roleData) {
+    const queryString = "UPDATE employee SET role_id = ? WHERE id = ?";
+    connection.query(queryString, [roleData[0].id, choosenEmp[0].id], (err, result) => {
+        if (err) throw err;
+
+        console.log('============================')
+        console.log("The role was updated!")
+        console.log('============================')
+
+        runStart();
+    })
+}
 
 function viewAllDepts() {
     console.log('============================')
