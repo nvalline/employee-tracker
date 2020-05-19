@@ -87,6 +87,84 @@ function runStart() {
         })
 }
 
+function addEmpDetails(roleData) {
+    let mgrArray = ["None"];
+
+    const mgrString = "SELECT id, first_name, last_name FROM employee";
+    connection.query(mgrString, (err, data) => {
+        if (err) throw err;
+
+        let fullName = [];
+        for (const mgr of data) {
+            fullName = `${mgr.first_name} ${mgr.last_name}`;
+            mgrArray.push(fullName);
+        }
+
+
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "Enter the new employee's first name:",
+                name: "emp_fname"
+            },
+            {
+                type: "input",
+                message: "Enter the new employee's last name:",
+                name: "emp_lname"
+            },
+            {
+                type: "input",
+                message: "Enter the salary:",
+                name: "emp_salary"
+            },
+            {
+                type: "list",
+                message: "Select the employee's manager:",
+                name: "emp_mgr",
+                choices: mgrArray
+            }
+        ])
+            .then(answer => {
+                let mgr;
+                if (answer.emp_mgr !== "None") {
+                    console.log(mgrArray)
+                    console.log(answer.emp_mgr)
+
+                    const mgrSplit = answer.emp_mgr.split(" ");
+                    console.log(mgrSplit[0])
+                    console.log(mgrSplit[1])
+
+                    console.log("This is the data:")
+                    console.log(data)
+
+                    choosenMgr = data.filter((e) => {
+                        return e.first_name == mgrSplit[0] && e.last_name == mgrSplit[1];
+                    })
+                    console.log("This is the choosenMgr:")
+                    console.log(choosenMgr)
+
+                    const mgrId = choosenMgr[0].id;
+                    console.log(mgrId)
+
+                    mgr = mgrId;
+                } else {
+                    mgr = null;
+                }
+
+                const insertString = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
+                connection.query(insertString, [answer.emp_fname, answer.emp_lname, roleData[0].id, mgr], (err, result) => {
+                    if (err) throw err;
+
+                    console.log('============================')
+                    console.log(`${answer.emp_fname} ${answer.emp_lname} was added!`)
+                    console.log('============================')
+                    runStart();
+                })
+            })
+    })
+
+}
+
 function addNewDept() {
     inquirer.prompt({
         type: "input",
@@ -103,6 +181,42 @@ function addNewDept() {
                 runStart();
             })
         })
+}
+
+function addNewEmp() {
+    let roleArray = ["Create New"];
+    let roleQuery;
+
+    const queryString = "SELECT * FROM role";
+    connection.query(queryString, (err, data) => {
+        if (err) throw err;
+        roleQuery = data;
+
+        for (const role of roleQuery) {
+            roleArray.push(role.title);
+        }
+
+        inquirer.prompt(
+            {
+                type: "list",
+                message: "Enter the role of the new employee:",
+                name: "emp_role",
+                choices: roleArray
+            }
+        )
+            .then(answer => {
+                if (answer.emp_role === "Create New") {
+                    console.log("You must first create the role.")
+                    addNewRole();
+                } else {
+                    roleData = roleQuery.filter((role) => {
+                        return role.title == answer.emp_role;
+                    })
+
+                    addEmpDetails(roleData);
+                }
+            })
+    })
 }
 
 function addNewRole() {
@@ -131,6 +245,9 @@ function addNewRole() {
             }
         ])
             .then(answer => {
+
+                // ** If role exists return
+
                 choosenDept = deptsQuery.filter((dept) => {
                     return dept.name == answer.dept;
                 })
@@ -206,6 +323,7 @@ function viewAllEmps() {
     let queryString = "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name, employee.manager_id ";
     queryString += "FROM employee INNER JOIN role ON role.id = employee.role_id ";
     queryString += "INNER JOIN department ON department.id = role.department_id ";
+    queryString += "ORDER BY id ASC";
     connection.query(queryString, (err, res) => {
         if (err) throw err;
         console.table(res)
