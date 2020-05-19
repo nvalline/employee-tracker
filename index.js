@@ -131,29 +131,23 @@ function addNewRole() {
             }
         ])
             .then(answer => {
-                console.log(answer)
-                let deptId;
-                const queryString = "SELECT id FROM department WHERE name = ?";
-                connection.query(queryString, [answer.dept], (err, data) => {
-                    console.log(data)
+                choosenDept = deptsQuery.filter((dept) => {
+                    return dept.name == answer.dept;
+                })
 
-                    deptId = data[0].id;
-                    console.log(deptId)
+                const deptId = choosenDept[0].id;
 
-                    const insertString = "INSERT INTO role (title, department_id) VALUES (?, ?)";
-                    connection.query(insertString, [answer.role_name, deptId], (err, result) => {
-                        if (err) throw err;
-                        console.log('============================')
-                        console.log(`${answer.role_name} was added!`)
-                        console.log('============================')
+                const insertString = "INSERT INTO role (title, department_id) VALUES (?, ?)";
+                connection.query(insertString, [answer.role_name, deptId], (err, result) => {
+                    if (err) throw err;
+                    console.log('============================')
+                    console.log(`${answer.role_name} was added!`)
+                    console.log('============================')
 
-                        runStart();
-                    })
+                    runStart();
                 })
             })
     })
-
-
 }
 
 // function empByMgr(data) {
