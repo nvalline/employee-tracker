@@ -63,13 +63,16 @@ function runStart() {
         })
 }
 
+// Add employee details
 function addEmpDetails(roleData) {
     let mgrArray = ["None"];
 
+    // Query employee table for data
     const mgrString = "SELECT id, first_name, last_name FROM employee";
     connection.query(mgrString, (err, data) => {
         if (err) throw err;
 
+        // Concat employee/manager names
         let fullName = [];
         for (const mgr of data) {
             fullName = `${mgr.first_name} ${mgr.last_name}`;
@@ -102,8 +105,8 @@ function addEmpDetails(roleData) {
         ])
             .then(answer => {
                 let mgr;
+                // Split manager choice to identify id
                 if (answer.emp_mgr !== "None") {
-
                     const mgrSplit = answer.emp_mgr.split(" ");
 
                     choosenMgr = data.filter((e) => {
@@ -117,6 +120,7 @@ function addEmpDetails(roleData) {
                     mgr = null;
                 }
 
+                // Add employee to table
                 const insertString = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)";
                 connection.query(insertString, [answer.emp_fname, answer.emp_lname, roleData[0].id, mgr], (err, result) => {
                     if (err) throw err;
@@ -131,6 +135,7 @@ function addEmpDetails(roleData) {
 
 }
 
+// Add new department
 function addNewDept() {
     inquirer.prompt({
         type: "input",
@@ -149,10 +154,12 @@ function addNewDept() {
         })
 }
 
+// Add new employee, check for role
 function addNewEmp() {
     let roleArray = ["Create New"];
     let roleQuery;
 
+    // Query for role data
     const queryString = "SELECT * FROM role";
     connection.query(queryString, (err, data) => {
         if (err) throw err;
@@ -171,6 +178,7 @@ function addNewEmp() {
             }
         )
             .then(answer => {
+                // If new role, prompted to first create role. Else pass roleData on to addEmpDetails
                 if (answer.emp_role === "Create New") {
                     console.log("You must first create the role.")
                     addNewRole();
@@ -185,10 +193,12 @@ function addNewEmp() {
     })
 }
 
+// Add new role
 function addNewRole() {
     let deptsArray = [];
     let deptsQuery;
 
+    // Query for department data
     const queryString = "SELECT * FROM department";
     connection.query(queryString, (err, data) => {
         deptsQuery = data;
@@ -211,13 +221,14 @@ function addNewRole() {
             }
         ])
             .then(answer => {
-
+                // filter choice to determine department id
                 choosenDept = deptsQuery.filter((dept) => {
                     return dept.name == answer.dept;
                 })
 
                 const deptId = choosenDept[0].id;
 
+                // Add role to role table
                 const insertString = "INSERT INTO role (title, department_id) VALUES (?, ?)";
                 connection.query(insertString, [answer.role_name, deptId], (err, result) => {
                     if (err) throw err;
@@ -231,15 +242,18 @@ function addNewRole() {
     })
 }
 
+// Delete an employee
 function deleteAnEmp() {
     let empArray = ["Cancel"];
     let empQuery;
 
+    // Query employee data
     const queryEmpString = "SELECT * FROM employee";
     connection.query(queryEmpString, (err, data) => {
         if (err) throw err;
         empQuery = data;
 
+        // Concat employee names
         for (const name of empQuery) {
             fullName = `${name.first_name} ${name.last_name}`;
             empArray.push(fullName);
@@ -272,6 +286,7 @@ function deleteAnEmp() {
     })
 }
 
+// Delete Employee Query
 function deleteEmployee(choosenEmp) {
     const queryString = "DELETE FROM employee WHERE id = ?";
     connection.query(queryString, [choosenEmp[0].id], (err, result) => {
@@ -285,12 +300,14 @@ function deleteEmployee(choosenEmp) {
     })
 }
 
+// Update employee role
 function updateRole() {
     let empArray = [];
     let empQuery;
     let roleArray = ["Create New"];
     let roleQuery;
 
+    // Query for employee data
     const queryEmpString = "SELECT * FROM employee";
     connection.query(queryEmpString, (err, data) => {
         if (err) throw err;
@@ -302,6 +319,7 @@ function updateRole() {
         }
     })
 
+    // Query for Role data
     const queryRoleString = "SELECT * FROM role";
     connection.query(queryRoleString, (err, data) => {
         if (err) throw err;
@@ -346,6 +364,7 @@ function updateRole() {
     })
 }
 
+// Query to update role details
 function updateRoleDetails(choosenEmp, roleData) {
     const queryString = "UPDATE employee SET role_id = ? WHERE id = ?";
     connection.query(queryString, [roleData[0].id, choosenEmp[0].id], (err, result) => {
@@ -359,6 +378,7 @@ function updateRoleDetails(choosenEmp, roleData) {
     })
 }
 
+// View All Departments
 function viewAllDepts() {
     console.log('============================')
     console.log('All Departments')
@@ -371,6 +391,7 @@ function viewAllDepts() {
     })
 }
 
+// View All Employees
 function viewAllEmps() {
     console.log('============================')
     console.log('All Employees')
@@ -388,6 +409,7 @@ function viewAllEmps() {
     })
 }
 
+// View All Roles
 function viewAllRoles() {
     console.log('============================')
     console.log('All Roles')

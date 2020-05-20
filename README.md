@@ -2,11 +2,11 @@
 
 # Employee Tracker
 
-<img src="./images/note-taker.png" alt="Project Screenshot" max-height="500px">
+<img src="./assets/img/employee-tracker.png" alt="Project Screenshot" max-height="500px">
 
-> This application allows the user to enter and save notes, view previous notes and delete notes that are no longer needed.
+> This command line interface allows the user to view/add/update & delete department, employee roles & employees.
 
-#### [View The Site](https://peaceful-meadow-53544.herokuapp.com/) - The project is live.
+#### [View The Site](#) - The project is not live.
 
 ---
 
@@ -25,9 +25,11 @@
 
 ## Description
 
-This application can be used to create, review and delete notes. Utilizing an express backend, the user can save and retrieve note data from a JSON file.  
+This command line interface utilizes node.js and mysql to provide the user with an application to create/view/update & delete department, employee roles & employees.  
 
-The user is first presented with a landing page. From the landing page, the user is able to navigate to a 'notes' page where the user can interact with the app to create, review and delete notes.  
+The node interface provides a smooth user experience as it prompts the user through the different functionalities.  
+
+By utilizing mysql, this application is able to store and retrieve data quickly and accurately.  
 
 [Back To The Top](#project-name)
 
@@ -37,7 +39,7 @@ The user is first presented with a landing page. From the landing page, the user
 
 ![GitHub Top Language](https://img.shields.io/github/languages/top/nvalline/employee-tracker) ![GitHub language count](https://img.shields.io/github/languages/count/nvalline/employee-tracker)
 
-- Javascript, node.js, express.js, HTML, CSS
+- Javascript, node.js, MYSQL
 
 [Back To The Top](#project-name)
 
@@ -45,9 +47,11 @@ The user is first presented with a landing page. From the landing page, the user
 
 ## Installation
 
-Simply load the application in your browser by clicking this link.
+Download the source files to the desired project directory. Open the terminal and navigate to the directory in the last step. Simply enter 'npm install', to install the necessary dependencies.
 
-#### [View The Site](https://peaceful-meadow-53544.herokuapp.com/) - The project is live.
+### [Video Walkthrough](#)
+
+#### [View The Site](#) - The project is not live.
 
 [Back To The Top](#project-name)
 
@@ -55,14 +59,9 @@ Simply load the application in your browser by clicking this link.
 
 ## How To Use
 
-Once the application is loaded in your browser follow these steps:
-- Click the 'Get Started' button on the home page
-- Enter your note title in the 'Note Title' field
-- Enter your note content in the 'Note Text' field
-- Click the computer disk icon to save your note
-- Your notes will be displayed on the left column where you are able to click on each note to view it's content
-- Click on the pen icon to create a new note
-- Click the red trashcan icon for the note that you wish to delete
+Once the dependencies are installed, simply open the terminal and enter 'npm start'. This will launch the application. Follow the prompts that are presented in the terminal. Use the 'Enter/Return' key to submit the response to each prompt.
+
+### [Video Walkthrough](#)
 
 [Back To The Top](#project-name)
 
