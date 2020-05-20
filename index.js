@@ -92,11 +92,6 @@ function addEmpDetails(roleData) {
                 name: "emp_lname"
             },
             {
-                type: "input",
-                message: "Enter the salary:",
-                name: "emp_salary"
-            },
-            {
                 type: "list",
                 message: "Select the employee's manager:",
                 name: "emp_mgr",
