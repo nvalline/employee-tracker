@@ -3,23 +3,16 @@ const cTable = require('console.table');
 const inquirer = require('inquirer');
 const connection = require('./assets/config/connection');
 
-// Action functionality
-// const { empByMgr, addNewDept, addNewEmp, addNewRole, updateRole, updateMgr, deleteADept, deleteAnEmp, deleteARole } = require('./assets/scripts/app');
-
 // Application initialization
 function runStart() {
     const viewDepts = "View ALL departments";
     const viewEmps = "View ALL employees";
     const viewRoles = "View ALL Roles";
-    const viewEmpByMgr = "View Employees by manager";
     const addDept = "Add a department";
     const addEmp = "Add an employee";
     const addRole = "Add a role";
     const updateEmpRole = "Update an employee role";
-    const updateEmpMgr = "Update an employee manager";
-    const deleteDept = "Delete a department";
     const deleteEmp = "Delete an employee";
-    const deleteRole = "Delete a role";
 
     inquirer.prompt({
         type: "list",
@@ -38,7 +31,6 @@ function runStart() {
         ]
     })
         .then(answer => {
-            let result;
             switch (answer.action) {
                 case viewDepts:
                     viewAllDepts();
@@ -383,12 +375,14 @@ function viewAllEmps() {
     console.log('============================')
     console.log('All Employees')
     console.log('============================')
-    let queryString = "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name, employee.manager_id ";
+    let queryString = "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, IFNULL(CONCAT_WS(' ', m.first_name, m.last_name), 'n/a') AS manager ";
     queryString += "FROM employee INNER JOIN role ON role.id = employee.role_id ";
     queryString += "INNER JOIN department ON department.id = role.department_id ";
+    queryString += "LEFT JOIN employee m ON m.id = employee.manager_id "
     queryString += "ORDER BY id ASC";
     connection.query(queryString, (err, res) => {
         if (err) throw err;
+
         console.table(res)
         runStart();
     })
