@@ -218,6 +218,11 @@ function addNewRole() {
                 type: "input",
                 message: "Enter the name of the role",
                 name: "role_name"
+            },
+            {
+                type: "input",
+                message: "Enter the starting salary:",
+                name: "role_salary"
             }
         ])
             .then(answer => {
@@ -229,8 +234,8 @@ function addNewRole() {
                 const deptId = choosenDept[0].id;
 
                 // Add role to role table
-                const insertString = "INSERT INTO role (title, department_id) VALUES (?, ?)";
-                connection.query(insertString, [answer.role_name, deptId], (err, result) => {
+                const insertString = "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)";
+                connection.query(insertString, [answer.role_name, answer.role_salary, deptId], (err, result) => {
                     if (err) throw err;
                     console.log('============================')
                     console.log(`${answer.role_name} was added!`)
