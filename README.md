@@ -2,7 +2,7 @@
 
 # Employee Tracker
 
-<img src="./assets/img/employee-tracker.png" alt="Project Screenshot" max-height="500px">
+<img src="./assets/img/employee-tracker.png" alt="Project Screenshot" max-height="400px">
 
 > This command line interface allows the user to view/add/update & delete department, employee roles & employees.
 
@@ -49,7 +49,7 @@ By utilizing mysql, this application is able to store and retrieve data quickly 
 
 Download the source files to the desired project directory. Open the terminal and navigate to the directory in the last step. Simply enter 'npm install', to install the necessary dependencies.
 
-### [Video Walkthrough](#)
+#### [Video Walkthrough](#)
 
 #### [View The Site](#) - The project is not live.
 
@@ -61,7 +61,7 @@ Download the source files to the desired project directory. Open the terminal an
 
 Once the dependencies are installed, simply open the terminal and enter 'npm start'. This will launch the application. Follow the prompts that are presented in the terminal. Use the 'Enter/Return' key to submit the response to each prompt.
 
-### [Video Walkthrough](#)
+#### [Video Walkthrough](#)
 
 [Back To The Top](#project-name)
 
