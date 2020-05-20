@@ -29,15 +29,11 @@ function runStart() {
             viewDepts,
             viewEmps,
             viewRoles,
-            // viewEmpByMgr,
             addDept,
             addEmp,
             addRole,
             updateEmpRole,
-            updateEmpMgr,
-            deleteDept,
             deleteEmp,
-            deleteRole,
             "Exit"
         ]
     })
@@ -240,6 +236,60 @@ function addNewRole() {
                     runStart();
                 })
             })
+    })
+}
+
+function deleteAnEmp() {
+    let empArray = ["Cancel"];
+    let empQuery;
+
+    const queryEmpString = "SELECT * FROM employee";
+    connection.query(queryEmpString, (err, data) => {
+        if (err) throw err;
+        empQuery = data;
+
+        for (const name of empQuery) {
+            fullName = `${name.first_name} ${name.last_name}`;
+            empArray.push(fullName);
+        }
+
+        inquirer.prompt([
+            {
+                type: "list",
+                message: "Select the employee to remove:",
+                name: "emp_del",
+                choices: empArray
+            }
+        ])
+            .then(answer => {
+                if (answer.emp_del === "Cancel") {
+                    console.log('============================')
+                    console.log("Delete Canceled")
+                    console.log('============================')
+                    runStart();
+                } else {
+                    const empSplit = answer.emp_del.split(" ");
+
+                    choosenEmp = empQuery.filter((e) => {
+                        return e.first_name == empSplit[0] && e.last_name == empSplit[1];
+                    })
+
+                    deleteEmployee(choosenEmp);
+                }
+            })
+    })
+}
+
+function deleteEmployee(choosenEmp) {
+    const queryString = "DELETE FROM employee WHERE id = ?";
+    connection.query(queryString, [choosenEmp[0].id], (err, result) => {
+        if (err) throw err;
+
+        console.log('============================')
+        console.log(`${choosenEmp[0].first_name} ${choosenEmp[0].last_name} was deleted!`)
+        console.log('============================')
+
+        runStart();
     })
 }
 
